@@ -1,8 +1,8 @@
 {
-  "name": "@amaui/aws",
+  "name": "@onesy/aws",
   "version": "1.1.20",
   "description": "AWS utils",
-  "repository": "https://github.com/amaui-org/amaui-aws.git",
+  "repository": "https://github.com/onesy-org/onesy-aws.git",
   "author": "Lazar <lazareric.com@gmail.com>",
   "license": "MIT",
   "private": false,
@@ -23,7 +23,7 @@
     "nodejs",
     "node",
     "library",
-    "amaui",
+    "onesy",
     "utils"
   ],
   "scripts": {
@@ -32,26 +32,26 @@
     "release": "yarn build && yarn version --patch --no-git-tag-version && yarn build && cd ./build && npm publish",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "type": "tsc --noEmit -p tsconfig.json",
-    "cov": "cross-env NODE_ENV=test amaui-test",
+    "cov": "cross-env NODE_ENV=test onesy-test",
     "test": "yarn lint && yarn type && yarn build && yarn cov",
-    "docker": "docker-compose -p 'amaui' up -d",
-    "aws": "cross-env AWS_ACCESS_KEY_ID=amaui AWS_SECRET_ACCESS_KEY=amaui aws s3 mb s3://amaui --endpoint-url http://localhost:4566",
-    "aws-test": "cross-env AWS_ACCESS_KEY_ID=amaui AWS_SECRET_ACCESS_KEY=amaui aws s3 mb s3://amaui-test --endpoint-url http://localhost:7566",
+    "docker": "docker-compose -p 'onesy' up -d",
+    "aws": "cross-env AWS_ACCESS_KEY_ID=onesy AWS_SECRET_ACCESS_KEY=onesy aws s3 mb s3://onesy --endpoint-url http://localhost:4566",
+    "aws-test": "cross-env AWS_ACCESS_KEY_ID=onesy AWS_SECRET_ACCESS_KEY=onesy aws s3 mb s3://onesy-test --endpoint-url http://localhost:7566",
     "postdocker": "sleep 4 && yarn aws || echo '' && yarn aws-test || echo ''"
   },
   "peerDependencies": {
     "@aws-sdk/client-s3": "^3.350.0"
   },
   "dependencies": {
-    "@amaui/date": "^1.1.11",
-    "@amaui/errors": "^1.0.111",
-    "@amaui/log": "^1.0.21",
-    "@amaui/utils": "^1.1.18",
+    "@onesy/date": "^1.1.11",
+    "@onesy/errors": "^1.0.111",
+    "@onesy/log": "^1.0.21",
+    "@onesy/utils": "^1.1.18",
     "@babel/runtime": "^7.18.3"
   },
   "devDependencies": {
-    "@amaui/models": "^1.0.1111",
-    "@amaui/test": "^1.1.1",
+    "@onesy/models": "^1.0.1111",
+    "@onesy/test": "^1.1.1",
     "@aws-sdk/client-s3": "^3.350.0",
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",

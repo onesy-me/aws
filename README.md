@@ -4,11 +4,11 @@
 
 <p align='center'>
   <a target='_blank' rel='noopener noreferrer' href='#'>
-    <img src='utils/images/logo.svg' alt='amaui logo' />
+    <img src='utils/images/logo.svg' alt='onesy logo' />
   </a>
 </p>
 
-<h1 align='center'>amaui AWS</h1>
+<h1 align='center'>onesy AWS</h1>
 
 <p align='center'>
   AWS
@@ -38,7 +38,7 @@
 ### Add
 
 ```sh
-yarn add @amaui/aws
+yarn add @onesy/aws
 ```
 
 Add `@aws-sdk/client-s3` peer dependency.
@@ -50,14 +50,14 @@ yarn add @aws-sdk/client-s3
 ### Use
 
 ```javascript
-  import AmauiAws from '@amaui/aws';
+  import OnesyAws from '@onesy/aws';
 
   // Make if you wanna a config file and
   // inside of it add all the process.env related props
   import Config from './config';
 
   // Make a new aws instance
-  const amauiAws = new AmauiAws({
+  const onesyAws = new OnesyAws({
     s3: {
       bucketName: Config.aws.s3.bucketName,
 
@@ -73,17 +73,17 @@ yarn add @aws-sdk/client-s3
   });
 
   // Add
-  await amauiAws.s3.add('a', 4);
+  await onesyAws.s3.add('a', 4);
 
   // Get
-  await amauiAws.s3.get('a');
+  await onesyAws.s3.get('a');
 
   // 4
 
   // Remove
-  await amauiAws.s3.remove('a');
+  await onesyAws.s3.remove('a');
 
-  await amauiAws.s3.get('a');
+  await onesyAws.s3.get('a');
 
   // undefined
 ```

@@ -2,14 +2,14 @@ import * as AWS_S3 from '@aws-sdk/client-s3';
 import express from 'express';
 import { Readable } from 'stream';
 
-import is from '@amaui/utils/is';
-import merge from '@amaui/utils/merge';
-import parse from '@amaui/utils/parse';
-import stringify from '@amaui/utils/stringify';
-import { AmauiAwsError } from '@amaui/errors';
-import AmauiDate from '@amaui/date/AmauiDate';
-import duration from '@amaui/date/duration';
-import AmauiLog from '@amaui/log';
+import is from '@onesy/utils/is';
+import merge from '@onesy/utils/merge';
+import parse from '@onesy/utils/parse';
+import stringify from '@onesy/utils/stringify';
+import { OnesyAwsError } from '@onesy/errors';
+import OnesyDate from '@onesy/date/OnesyDate';
+import duration from '@onesy/date/duration';
+import OnesyLog from '@onesy/log';
 
 export interface IConnections {
   s3?: AWS_S3.S3Client;
@@ -78,10 +78,10 @@ const optionsDefault = {
   }
 };
 
-export class AmauiAws {
+export class OnesyAws {
   private options: IOptions;
   private connections_: IConnections = {};
-  private amalog: AmauiLog;
+  private amalog: OnesyLog;
 
   public get connections(): IConnections {
     if (!this.connections_.s3) this.connections_.s3 = new AWS_S3.S3Client({
@@ -101,7 +101,7 @@ export class AmauiAws {
     // Get initial connection
     this.connections;
 
-    this.amalog = new AmauiLog({
+    this.amalog = new OnesyLog({
       arguments: {
         pre: ['AWS', 'S3'],
       },
@@ -114,7 +114,7 @@ export class AmauiAws {
     return {
       async add(id: string, value_: any, options: Partial<IOptionsS3Add> = {}): Promise<AWS_S3.PutObjectOutput> {
         const connection = thisClass.connections.s3;
-        const start = AmauiDate.utc.milliseconds;
+        const start = OnesyDate.utc.milliseconds;
 
         const {
           bucketName,
@@ -144,13 +144,13 @@ export class AmauiAws {
         catch (error) {
           thisClass.response(start, bucketName, 'add');
 
-          throw new AmauiAwsError(error);
+          throw new OnesyAwsError(error);
         }
       },
 
       async get(id: string, options: Partial<IOptionsS3Get> = { type: 'buffer' }): Promise<AWS_S3.GetObjectOutput | Buffer | string | object> {
         const connection = thisClass.connections.s3;
-        const start = AmauiDate.utc.milliseconds;
+        const start = OnesyDate.utc.milliseconds;
 
         const {
           bucketName,
@@ -186,13 +186,13 @@ export class AmauiAws {
 
           thisClass.response(start, bucketName, 'get');
 
-          throw new AmauiAwsError(error);
+          throw new OnesyAwsError(error);
         }
       },
 
       async remove(id: string, options: Partial<IOptionsS3Remove> = {}): Promise<AWS_S3.DeleteObjectOutput | boolean> {
         const connection = thisClass.connections.s3;
-        const start = AmauiDate.utc.milliseconds;
+        const start = OnesyDate.utc.milliseconds;
 
         const {
           bucketName,
@@ -222,13 +222,13 @@ export class AmauiAws {
 
           thisClass.response(start, bucketName, 'remove');
 
-          throw new AmauiAwsError(error);
+          throw new OnesyAwsError(error);
         }
       },
 
       async removeMany(ids: string[], options: Partial<IOptionsS3RemoveMany> = {}): Promise<Array<AWS_S3.DeleteObjectOutput | boolean | Error>> {
         const responses = [];
-        const start = AmauiDate.utc.milliseconds;
+        const start = OnesyDate.utc.milliseconds;
 
         const bucketName = options.bucketName || thisClass.options.s3.bucketName;
 
@@ -262,7 +262,7 @@ export class AmauiAws {
       if (method) arguments_.push(`Method: ${method}`);
       if ((req as any)?.id) arguments_.push(`Request ID: ${(req as any).id}`);
 
-      arguments_.push(`Duration: ${duration(AmauiDate.utc.milliseconds - start, true)}`);
+      arguments_.push(`Duration: ${duration(OnesyDate.utc.milliseconds - start, true)}`);
 
       this.amalog.debug(...arguments_);
     }
@@ -272,4 +272,4 @@ export class AmauiAws {
 
 }
 
-export default AmauiAws;
+export default OnesyAws;

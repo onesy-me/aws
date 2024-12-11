@@ -1,1 +1,1 @@
-export { default } from './AmauiAws';
+export { default } from './OnesyAws';

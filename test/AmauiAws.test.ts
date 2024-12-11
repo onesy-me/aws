@@ -1,10 +1,10 @@
 /* tslint:disable: no-shadowed-variable */
-import { assert } from '@amaui/test';
+import { assert } from '@onesy/test';
 
-import * as AmauiUtils from '@amaui/utils';
-import AmauiLog from '@amaui/log';
+import * as OnesyUtils from '@onesy/utils';
+import OnesyLog from '@onesy/log';
 
-import AmauiAws from '../src';
+import OnesyAws from '../src';
 
 import Config from '../utils/js/config';
 
@@ -23,28 +23,28 @@ const options = {
   }
 };
 
-group('@amaui/aws', () => {
+group('@onesy/aws', () => {
 
-  group('AmauiAws', () => {
-    let amauiAws: AmauiAws;
+  group('OnesyAws', () => {
+    let onesyAws: OnesyAws;
     const addedItems = [];
 
     pre(() => {
-      amauiAws = new AmauiAws(options);
+      onesyAws = new OnesyAws(options);
 
-      AmauiLog.options.log.enabled = false;
+      OnesyLog.options.log.enabled = false;
     });
 
     post(async () => {
-      await amauiAws.s3.removeMany(addedItems.map(item => item.id));
+      await onesyAws.s3.removeMany(addedItems.map(item => item.id));
 
-      AmauiLog.options.log.enabled = true;
+      OnesyLog.options.log.enabled = true;
     });
 
     group('connections', () => {
 
       to('s3', () => {
-        assert((amauiAws.connections.s3 as any)._clientId).eq(1);
+        assert((onesyAws.connections.s3 as any)._clientId).eq(1);
       });
 
     });
@@ -54,7 +54,7 @@ group('@amaui/aws', () => {
       group('add', () => {
 
         to('text', async () => {
-          const response = await amauiAws.s3.add('1', 'a');
+          const response = await onesyAws.s3.add('1', 'a');
 
           assert(response.ETag).exist;
 
@@ -64,7 +64,7 @@ group('@amaui/aws', () => {
         });
 
         to('object', async () => {
-          const response = await amauiAws.s3.add('2', { a: 'a4' });
+          const response = await onesyAws.s3.add('2', { a: 'a4' });
 
           assert(response.ETag).exist;
 
@@ -74,7 +74,7 @@ group('@amaui/aws', () => {
         });
 
         to('buffer', async () => {
-          const response = await amauiAws.s3.add('3', Buffer.from('a'));
+          const response = await onesyAws.s3.add('3', Buffer.from('a'));
 
           assert(response.ETag).exist;
 
@@ -90,11 +90,11 @@ group('@amaui/aws', () => {
         group('options', () => {
 
           to('pure', async () => {
-            const response = await amauiAws.s3.get('1', { type: 'text', pure: true }) as any;
-            const response1 = await amauiAws.s3.get('1', { type: 'text', pure: false }) as any;
+            const response = await onesyAws.s3.get('1', { type: 'text', pure: true }) as any;
+            const response1 = await onesyAws.s3.get('1', { type: 'text', pure: false }) as any;
 
             assert(response.AcceptRanges).eq('bytes');
-            assert(AmauiUtils.is('buffer', response.Body)).eq(true);
+            assert(OnesyUtils.is('buffer', response.Body)).eq(true);
 
             assert(response1).eq('a');
           });
@@ -102,25 +102,25 @@ group('@amaui/aws', () => {
         });
 
         to('text', async () => {
-          const response = await amauiAws.s3.get('1', { type: 'text' });
+          const response = await onesyAws.s3.get('1', { type: 'text' });
 
           assert(response).eq('a');
         });
 
         to('object', async () => {
-          const response = await amauiAws.s3.get('2', { type: 'json' });
+          const response = await onesyAws.s3.get('2', { type: 'json' });
 
           assert(response).eql({ a: 'a4' });
         });
 
         to('buffer', async () => {
-          const response = await amauiAws.s3.get('3');
+          const response = await onesyAws.s3.get('3');
 
           assert(response.toString('utf-8')).eq('a');
         });
 
         to('Not found', async () => {
-          const response = await amauiAws.s3.get('4');
+          const response = await onesyAws.s3.get('4');
 
           assert(response).eq(undefined);
         });
@@ -132,11 +132,11 @@ group('@amaui/aws', () => {
         group('options', () => {
 
           to('pure', async () => {
-            const response = await amauiAws.s3.remove('1', { pure: true }) as any;
-            const response1 = await amauiAws.s3.remove('2', { pure: false }) as any;
+            const response = await onesyAws.s3.remove('1', { pure: true }) as any;
+            const response1 = await onesyAws.s3.remove('2', { pure: false }) as any;
 
             assert(response).eql({});
-            assert(await amauiAws.s3.get('1')).eq(undefined);
+            assert(await onesyAws.s3.get('1')).eq(undefined);
 
             addedItems.splice(0, 2);
 
@@ -146,15 +146,15 @@ group('@amaui/aws', () => {
         });
 
         to('remove', async () => {
-          await amauiAws.s3.remove('3') as any;
+          await onesyAws.s3.remove('3') as any;
 
-          assert(await amauiAws.s3.get('3')).eq(undefined);
+          assert(await onesyAws.s3.get('3')).eq(undefined);
 
           addedItems.splice(0, 1);
         });
 
         to('Not found', async () => {
-          await amauiAws.s3.remove('4') as any;
+          await onesyAws.s3.remove('4') as any;
         });
 
       });
@@ -162,21 +162,21 @@ group('@amaui/aws', () => {
       group('removeMany', async () => {
 
         preTo(async () => {
-          await amauiAws.s3.add('11', 'a');
-          await amauiAws.s3.add('12', 'a');
-          await amauiAws.s3.add('13', 'a');
-          await amauiAws.s3.add('14', 'a');
+          await onesyAws.s3.add('11', 'a');
+          await onesyAws.s3.add('12', 'a');
+          await onesyAws.s3.add('13', 'a');
+          await onesyAws.s3.add('14', 'a');
         });
 
         group('options', () => {
 
           to('pure', async () => {
-            const response = await amauiAws.s3.removeMany(['11', '12'], { pure: true }) as Array<any>;
-            const response1 = await amauiAws.s3.removeMany(['13', '14'], { pure: false }) as Array<any>;
+            const response = await onesyAws.s3.removeMany(['11', '12'], { pure: true }) as Array<any>;
+            const response1 = await onesyAws.s3.removeMany(['13', '14'], { pure: false }) as Array<any>;
 
             assert(response).eql(new Array(2).fill({}));
-            assert(await amauiAws.s3.get('11')).eq(undefined);
-            assert(await amauiAws.s3.get('12')).eq(undefined);
+            assert(await onesyAws.s3.get('11')).eq(undefined);
+            assert(await onesyAws.s3.get('12')).eq(undefined);
 
             assert(response1).eql(new Array(2).fill(undefined));
           });
@@ -184,10 +184,10 @@ group('@amaui/aws', () => {
         });
 
         to('removeMany', async () => {
-          await amauiAws.s3.removeMany(['11', '12']) as Array<any>;
+          await onesyAws.s3.removeMany(['11', '12']) as Array<any>;
 
-          assert(await amauiAws.s3.get('11')).eq(undefined);
-          assert(await amauiAws.s3.get('12')).eq(undefined);
+          assert(await onesyAws.s3.get('11')).eq(undefined);
+          assert(await onesyAws.s3.get('12')).eq(undefined);
         });
 
       });
