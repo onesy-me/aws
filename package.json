@@ -2,7 +2,7 @@
   "name": "@onesy/aws",
   "version": "1.0.0",
   "description": "AWS utils",
-  "repository": "https://github.com/onesy-org/onesy-aws.git",
+  "repository": "https://github.com/onesy-me/aws.git",
   "author": "Lazar <lazareric.com@gmail.com>",
   "license": "MIT",
   "private": false,
